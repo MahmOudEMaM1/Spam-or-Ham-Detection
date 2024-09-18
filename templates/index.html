@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spam Detector</title>
+</head>
+<body>
+    <h1>Spam Detector</h1>
+    <form id="predictionForm" method="post" action="/predict">
+        <label for="message">Enter your message:</label><br>
+        <textarea id="message" name="message" rows="4" cols="50"></textarea><br>
+        <input type="submit" value="Predict">
+    </form>
+    <input type="text" id="prediction" name="prediction" readonly>
+    <script>
+        // Function to update prediction textbox
+        function updatePrediction(prediction) {
+            document.getElementById("prediction").value = prediction;
+        }
+
+        // Submit form via AJAX
+        document.getElementById("predictionForm").onsubmit = function(event) {
+            event.preventDefault();
+            var formData = new FormData(this);
+            fetch('/predict', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => updatePrediction(data.prediction))
+            .catch(error => console.error('Error:', error));
+        };
+    </script>
+</body>
+</html>
